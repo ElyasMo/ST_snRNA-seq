@@ -10,7 +10,7 @@ Technical manuscript
 
 library(Seurat)
 #####Importing the spatial data processed by spaceranger (spaceranger mkfastq/ spaceranger count)
-## the slices were not integrated by spaceranger (spaceranger agr). 
+## the consequtive slices were not integrated by spaceranger (spaceranger agr). 
 
 setwd("Directory")
 Directory="..."
@@ -168,14 +168,14 @@ CR_TN2 <- FindNeighbors(CR_TN2, dims = 1:30, verbose = FALSE)
 CR_TN2 <- FindClusters(CR_TN2, verbose = FALSE, resolution = 0.3) 
 
 ##clusters are shown prior to consequtive data integration
-DimPlot(HE_ON1, reduction = "umap")
-DimPlot(HE_TN1, reduction = "umap")
-DimPlot(CR_ON1, reduction = "umap")
-DimPlot(CR_TN1, reduction = "umap")
-DimPlot(HE_ON2, reduction = "umap")
-DimPlot(HE_TN2, reduction = "umap")
-DimPlot(CR_ON2, reduction = "umap")
-DimPlot(CR_TN2, reduction = "umap")
+SpatialDimPlot(HE_ON1,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_TN1,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_ON1,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_TN1,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_ON2,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_TN2,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_ON2,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_TN2,label = TRUE, label.size = 3)
 
 
 ###Adding extra information to metadata 

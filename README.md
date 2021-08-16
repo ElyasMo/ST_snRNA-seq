@@ -1,10 +1,10 @@
 # ST_snRNA-seq
 Technical manuscript
 
-Step1: 
-a) Data pre-processing
-b) data normalization
-c) dimentionality reduction and clustering
+## Step1: 
+**a)** Data pre-processing.
+**b)** Data normalization.
+**c)** Dimentionality reduction and clustering.
 
 ```r
 

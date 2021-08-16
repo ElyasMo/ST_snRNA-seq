@@ -361,3 +361,142 @@ SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes"
 
 
 ```
+
+# Step3
+a) Integrating the same cell types from two brain regions
+b) comparing the transcriptomic profile of the same cell type in two different brain regions
+
+```r
+library(Seurat)
+SP1 <-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP1.integrated.rds")
+SP2<-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP2.integrated.rds")
+CT1 <- readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/CT1.integrated.rds")
+CT2<-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/CT2.integrated.rds")
+
+SP1@meta.data$orig.ident<- sub("CR_SP1","CR_ON1",SP1@meta.data$orig.ident)
+SP1@meta.data$orig.ident<- sub("HE_SP1","HE_ON1",SP1@meta.data$orig.ident)
+SP2@meta.data$orig.ident<- sub("CR_SP2","CR_TN1",SP2@meta.data$orig.ident)
+SP2@meta.data$orig.ident<- sub("HE_SP2","HE_TN1",SP2@meta.data$orig.ident)
+
+CT1@meta.data$orig.ident<- sub("CR_CT1","CR_ON2",CT1@meta.data$orig.ident)
+CT1@meta.data$orig.ident<- sub("HE_CT1","HE_ON2",CT1@meta.data$orig.ident)
+CT2@meta.data$orig.ident<- sub("CR_CT2","CR_TN2",CT2@meta.data$orig.ident)
+CT2@meta.data$orig.ident<- sub("HE_CT2","HE_TN2",CT2@meta.data$orig.ident)
+
+
+DefaultAssay(SP1)<- "integrated"
+DefaultAssay(SP2)<- "integrated"
+DefaultAssay(CT1)<- "integrated"
+DefaultAssay(CT2)<- "integrated"
+
+SP1$region <- "Prefrontal"
+SP2$region <- "Temporal"
+CT1$region <- "Prefrontal"
+CT2$region <- "Temporal"
+
+SP1<-SplitObject(SP1, split.by = "predictions")
+SP2<-SplitObject(SP2, split.by = "predictions")
+CT1<-SplitObject(CT1, split.by = "predictions.label")
+CT2<-SplitObject(CT2, split.by = "predictions.label")
+
+
+SP.Astro.list<-list(SP1$Astrocytes, SP2$Astrocytes)
+SP.Neuron.list<-list(SP1$`Excitatory neurons`, SP2$`Excitatory neurons`)
+SP.Oligo.list<-list(SP1$Oligodendrocytes, SP2$Oligodendrocytes)
+
+CT.Astro.list<-list(CT1$Astrocytes, CT2$Astrocytes)
+CT.Neuron.list<-list(CT1$`Excitatory neurons`, CT2$`Excitatory neurons`)
+CT.Oligo.list<-list(CT1$Oligodendrocytes, CT2$Oligodendrocytes)
+
+
+
+##DATA integration
+SP.Astro.anchors <- FindIntegrationAnchors(object.list = SP.Astro.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+SP.Neuron.anchors <- FindIntegrationAnchors(object.list = SP.Neuron.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+SP.Oligo.anchors <- FindIntegrationAnchors(object.list = SP.Oligo.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+
+CT.Astro.anchors <- FindIntegrationAnchors(object.list = CT.Astro.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+CT.Neuron.anchors <- FindIntegrationAnchors(object.list = CT.Neuron.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+CT.Oligo.anchors <- FindIntegrationAnchors(object.list = CT.Oligo.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
+
+
+SP.Astro.integrated <- IntegrateData(anchorset = SP.Astro.anchors, dims = 1:30)
+SP.Neuron.integrated <- IntegrateData(anchorset = SP.Neuron.anchors, dims = 1:30)
+SP.Oligo.integrated <- IntegrateData(anchorset = SP.Oligo.anchors, dims = 1:30)
+
+CT.Astro.integrated <- IntegrateData(anchorset = CT.Astro.anchors, dims = 1:30)
+CT.Neuron.integrated <- IntegrateData(anchorset = CT.Neuron.anchors, dims = 1:30)
+CT.Oligo.integrated <- IntegrateData(anchorset = CT.Oligo.anchors, dims = 1:30)
+
+
+
+
+SP.Astro.integrated <- ScaleData(SP.Astro.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+SP.Astro.integrated <- RunPCA(SP.Astro.integrated, verbose = FALSE)
+SP.Astro.integrated <- RunUMAP(SP.Astro.integrated, dims = 1:30, verbose = FALSE)
+
+SP.Neuron.integrated <- ScaleData(SP.Neuron.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+SP.Neuron.integrated <- RunPCA(SP.Neuron.integrated, verbose = FALSE)
+SP.Neuron.integrated <- RunUMAP(SP.Neuron.integrated, dims = 1:30, verbose = FALSE)
+
+SP.Oligo.integrated <- ScaleData(SP.Oligo.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+SP.Oligo.integrated <- RunPCA(SP.Oligo.integrated, verbose = FALSE)
+SP.Oligo.integrated <- RunUMAP(SP.Oligo.integrated, dims = 1:30, verbose = FALSE)
+
+CT.Astro.integrated <- ScaleData(CT.Astro.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+CT.Astro.integrated <- RunPCA(CT.Astro.integrated, verbose = FALSE)
+CT.Astro.integrated <- RunUMAP(CT.Astro.integrated, dims = 1:30, verbose = FALSE)
+
+CT.Neuron.integrated <- ScaleData(CT.Neuron.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+CT.Neuron.integrated <- RunPCA(CT.Neuron.integrated, verbose = FALSE)
+CT.Neuron.integrated <- RunUMAP(CT.Neuron.integrated, dims = 1:30, verbose = FALSE)
+
+CT.Oligo.integrated <- ScaleData(CT.Oligo.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+CT.Oligo.integrated <- RunPCA(CT.Oligo.integrated, verbose = FALSE)
+CT.Oligo.integrated <- RunUMAP(CT.Oligo.integrated, dims = 1:30, verbose = FALSE)
+
+
+library(ggplot2)
+
+##Looking at the UMAP of each cell type in each slice seperately
+DimPlot(SP.Astro.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Astrocytes_AD")
+DimPlot(SP.Neuron.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Excitatory Neurons_AD")
+DimPlot(SP.Oligo.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Oligodendrocytes_AD")
+
+DimPlot(CT.Astro.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Astrocytes")
+DimPlot(CT.Neuron.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Excitatory Neurons")
+DimPlot(CT.Oligo.integrated, group.by = "region", split.by = "orig.ident")+ggtitle("Oligodendrocytes")
+
+
+##Comparing cell types in consecutive slices
+p1 <- DimPlot(SP.Astro.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Astrocytes_AD")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p2 <-DimPlot(SP.Neuron.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Excitatory Neurons_AD")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p3 <-DimPlot(SP.Oligo.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Oligodendrocytes_AD")+theme(plot.title = element_text(size = 15, face = "bold"))
+
+p4 <-DimPlot(CT.Astro.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Astrocytes")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p5 <-DimPlot(CT.Neuron.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Excitatory Neurons")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p6 <-DimPlot(CT.Oligo.integrated, group.by = "orig.ident", split.by = "region")+ggtitle("Oligodendrocytes")+theme(plot.title = element_text(size = 15, face = "bold"))
+
+library(ggrepel)
+library(ggpubr)
+
+ggarrange(p1, p2,p3,p4, p5,p6,
+                    ncol = 3, nrow = 2)
+
+
+##Comparing cell types between brain regions
+p1 <- DimPlot(SP.Astro.integrated, group.by = "region")+ ggtitle("Astrocytes1")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p2 <-DimPlot(SP.Neuron.integrated, group.by = "region")+ ggtitle("Excitatory Neurons1")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p3 <-DimPlot(SP.Oligo.integrated, group.by = "region")+ ggtitle("Oligodendrocytes1")+theme(plot.title = element_text(size = 15, face = "bold"))
+
+p4 <-DimPlot(CT.Astro.integrated, group.by = "region")+ ggtitle("Astrocytes2")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p5 <-DimPlot(CT.Neuron.integrated, group.by = "region")+ ggtitle("Excitatory Neurons2")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
+p6 <-DimPlot(CT.Oligo.integrated, group.by = "region")+ggtitle("Oligodendrocytes2")+theme(plot.title = element_text(size = 15, face = "bold"))
+
+library(ggrepel)
+library(ggpubr)
+
+ggarrange(p1, p2,p3,p4, p5,p6,
+                    ncol = 3, nrow = 2)
+
+```

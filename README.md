@@ -258,15 +258,14 @@ CT2.integrated <- RunUMAP(CT2.integrated, dims = 1:30, verbose = FALSE)
 CT2.integrated <- FindNeighbors(CT2.integrated, dims = 1:30, verbose = FALSE)
 CT2.integrated <- FindClusters(CT2.integrated, verbose = FALSE, resolution = 0.3)
 
-##cluster visualization
-DimPlot(SP1.integrated, reduction = "umap")
-DimPlot(SP2.integrated, reduction = "umap")
-DimPlot(CT1.integrated, reduction = "umap")
-DimPlot(CT2.integrated, reduction = "umap")
+##cluster visualization after consecutive slices data integration
+SpatialDimPlot(SP1.integrated,label = TRUE, label.size = 3)
+SpatialDimPlot(SP2.integrated,label = TRUE, label.size = 3)
+SpatialDimPlot(CT1.integrated,label = TRUE, label.size = 3)
+SpatialDimPlot(CT2.integrated,label = TRUE, label.size = 3)
 
 
 ##Saving the integrated data for further analysis
-
 #setwd()  Changing the directory to were you want to save the integrated objects
 saveRDS(SP1.integrated, "SP1.integrated.rds")
 saveRDS(SP1.integrated, "SP1.integrated.rds")

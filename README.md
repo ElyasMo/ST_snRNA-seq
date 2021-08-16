@@ -72,139 +72,139 @@ HE_ON2<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
 
 
 ##adding the percentage of MT genes to metadata
-CR_control_1[["percent.mt"]] <- PercentageFeatureSet(CR_control_1, pattern = "^MT-")
-CR_control_2[["percent.mt"]] <- PercentageFeatureSet(CR_control_2, pattern = "^MT-")
-CR_sample_1[["percent.mt"]] <- PercentageFeatureSet(CR_sample_1, pattern = "^MT-")
-CR_sample_2[["percent.mt"]] <- PercentageFeatureSet(CR_sample_2, pattern = "^MT-")
-HE_control_1[["percent.mt"]] <- PercentageFeatureSet(HE_control_1, pattern = "^MT-")
-HE_sample_1[["percent.mt"]] <- PercentageFeatureSet(HE_sample_1, pattern = "^MT-")
-HE_control_2[["percent.mt"]] <- PercentageFeatureSet(HE_control_2, pattern = "^MT-")
-HE_sample_2[["percent.mt"]] <- PercentageFeatureSet(HE_sample_2, pattern = "^MT-")
+CR_ON2[["percent.mt"]] <- PercentageFeatureSet(CR_ON2, pattern = "^MT-")
+CR_TN2[["percent.mt"]] <- PercentageFeatureSet(CR_TN2, pattern = "^MT-")
+CR_ON1[["percent.mt"]] <- PercentageFeatureSet(CR_ON1, pattern = "^MT-")
+CR_TN1[["percent.mt"]] <- PercentageFeatureSet(CR_TN1, pattern = "^MT-")
+HE_ON2[["percent.mt"]] <- PercentageFeatureSet(HE_ON2, pattern = "^MT-")
+HE_TN2[["percent.mt"]] <- PercentageFeatureSet(HE_TN2, pattern = "^MT-")
+HE_ON1[["percent.mt"]] <- PercentageFeatureSet(HE_ON1, pattern = "^MT-")
+HE_TN1[["percent.mt"]] <- PercentageFeatureSet(HE_TN1, pattern = "^MT-")
 
 
 
 ##Filtering the metadata basd on various criteria
-CR_control_2 <- subset(CR_control_2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-CR_sample_2 <- subset(CR_sample_2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
-CR_control_1 <- subset(CR_control_1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-CR_sample_1 <- subset(CR_sample_1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
-HE_control_1 <- subset(HE_control_1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_sample_1 <- subset(HE_sample_1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_control_2 <- subset(HE_control_2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_sample_2 <- subset(HE_sample_2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+CR_TN2 <- subset(CR_TN2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+CR_TN1 <- subset(CR_TN1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
+CR_ON2 <- subset(CR_ON2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+CR_ON1 <- subset(CR_ON1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
+HE_ON2 <- subset(HE_ON2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+HE_ON1 <- subset(HE_ON1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+HE_TN2 <- subset(HE_TN2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+HE_TN1 <- subset(HE_TN1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
 
 ##Data normalization
-CR_control_1 <- NormalizeData(CR_control_1)
-CR_sample_1 <- NormalizeData(CR_sample_1)
-CR_control_2 <- NormalizeData(CR_control_2)
-CR_sample_2 <- NormalizeData(CR_sample_2)
-HE_control_1 <- NormalizeData(HE_control_1)
-HE_sample_1 <- NormalizeData(HE_sample_1)
-HE_control_2 <- NormalizeData(HE_control_2)
-HE_sample_2 <- NormalizeData(HE_sample_2)
+CR_ON2 <- NormalizeData(CR_ON2)
+CR_ON1 <- NormalizeData(CR_ON1)
+CR_TN2 <- NormalizeData(CR_TN2)
+CR_TN1 <- NormalizeData(CR_TN1)
+HE_ON2 <- NormalizeData(HE_ON2)
+HE_ON1 <- NormalizeData(HE_ON1)
+HE_TN2 <- NormalizeData(HE_TN2)
+HE_TN1 <- NormalizeData(HE_TN1)
 
 
 ##Finidng variable features
-CR_control_1 <- FindVariableFeatures(CR_control_1, selection.method = "vst")
-CR_sample_1 <- FindVariableFeatures(CR_sample_1, selection.method = "vst")
-CR_control_2 <- FindVariableFeatures(CR_control_2, selection.method = "vst")
-CR_sample_2 <- FindVariableFeatures(CR_sample_2, selection.method = "vst")
-HE_control_1 <- FindVariableFeatures(HE_control_1, selection.method = "vst")
-HE_sample_1 <- FindVariableFeatures(HE_sample_1, selection.method = "vst")
-HE_control_2 <- FindVariableFeatures(HE_control_2, selection.method = "vst")
-HE_sample_2 <- FindVariableFeatures(HE_sample_2, selection.method = "vst")
+CR_ON2 <- FindVariableFeatures(CR_ON2, selection.method = "vst")
+CR_ON1 <- FindVariableFeatures(CR_ON1, selection.method = "vst")
+CR_TN2 <- FindVariableFeatures(CR_TN2, selection.method = "vst")
+CR_TN1 <- FindVariableFeatures(CR_TN1, selection.method = "vst")
+HE_ON2 <- FindVariableFeatures(HE_ON2, selection.method = "vst")
+HE_ON1 <- FindVariableFeatures(HE_ON1, selection.method = "vst")
+HE_TN2 <- FindVariableFeatures(HE_TN2, selection.method = "vst")
+HE_TN1 <- FindVariableFeatures(HE_TN1, selection.method = "vst")
 
 
 ##Scaling the data and regressing out the MT genes
-HE_sample_2<-ScaleData(HE_sample_2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_control_2<-ScaleData(HE_control_2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_sample_1 <- ScaleData(CR_sample_1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_control_1<-ScaleData(CR_control_1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_sample_1<-ScaleData(HE_sample_1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_control_1<-ScaleData(HE_control_1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_sample_2 <- ScaleData(CR_sample_2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_control_2 <-ScaleData(CR_control_2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+HE_TN1<-ScaleData(HE_TN1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+HE_TN2<-ScaleData(HE_TN2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+CR_ON1 <- ScaleData(CR_ON1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+CR_ON2<-ScaleData(CR_ON2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+HE_ON1<-ScaleData(HE_ON1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+HE_ON2<-ScaleData(HE_ON2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+CR_TN1 <- ScaleData(CR_TN1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+CR_TN2 <-ScaleData(CR_TN2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
 
 
 ## Preparing the required information for clustering and PCA/UMAP plots
-HE_sample_2 <- RunPCA(HE_sample_2, verbose = FALSE)
-HE_sample_2 <- RunUMAP(HE_sample_2, dims = 1:30, verbose = FALSE)
-HE_sample_2 <- FindNeighbors(HE_sample_2, dims = 1:30, verbose = FALSE)
-HE_sample_2 <- FindClusters(HE_sample_2, verbose = FALSE,resolution = 0.3) 
+HE_TN1 <- RunPCA(HE_TN1, verbose = FALSE)
+HE_TN1 <- RunUMAP(HE_TN1, dims = 1:30, verbose = FALSE)
+HE_TN1 <- FindNeighbors(HE_TN1, dims = 1:30, verbose = FALSE)
+HE_TN1 <- FindClusters(HE_TN1, verbose = FALSE,resolution = 0.3) 
 
-HE_control_2 <- RunPCA(HE_control_2, verbose = FALSE)
-HE_control_2 <- RunUMAP(HE_control_2, dims = 1:30, verbose = FALSE)
-HE_control_2 <- FindNeighbors(HE_control_2, dims = 1:30, verbose = FALSE)
-HE_control_2 <- FindClusters(HE_control_2, verbose = FALSE, resolution = 0.3)
+HE_TN2 <- RunPCA(HE_TN2, verbose = FALSE)
+HE_TN2 <- RunUMAP(HE_TN2, dims = 1:30, verbose = FALSE)
+HE_TN2 <- FindNeighbors(HE_TN2, dims = 1:30, verbose = FALSE)
+HE_TN2 <- FindClusters(HE_TN2, verbose = FALSE, resolution = 0.3)
 
-CR_sample_1 <- RunPCA(CR_sample_1, verbose = FALSE)
-CR_sample_1 <- RunUMAP(CR_sample_1, dims = 1:30, verbose = FALSE)
-CR_sample_1 <- FindNeighbors(CR_sample_1, dims = 1:30, verbose = FALSE)
-CR_sample_1 <- FindClusters(CR_sample_1, verbose = FALSE, resolution = 0.3)
+CR_ON1 <- RunPCA(CR_ON1, verbose = FALSE)
+CR_ON1 <- RunUMAP(CR_ON1, dims = 1:30, verbose = FALSE)
+CR_ON1 <- FindNeighbors(CR_ON1, dims = 1:30, verbose = FALSE)
+CR_ON1 <- FindClusters(CR_ON1, verbose = FALSE, resolution = 0.3)
 
-CR_control_1 <- RunPCA(CR_control_1, verbose = FALSE)
-CR_control_1 <- RunUMAP(CR_control_1, dims = 1:30, verbose = FALSE)
-CR_control_1 <- FindNeighbors(CR_control_1, dims = 1:30, verbose = FALSE)
-CR_control_1 <- FindClusters(CR_control_1, verbose = FALSE, resolution = 0.3) 
+CR_ON2 <- RunPCA(CR_ON2, verbose = FALSE)
+CR_ON2 <- RunUMAP(CR_ON2, dims = 1:30, verbose = FALSE)
+CR_ON2 <- FindNeighbors(CR_ON2, dims = 1:30, verbose = FALSE)
+CR_ON2 <- FindClusters(CR_ON2, verbose = FALSE, resolution = 0.3) 
 
-HE_sample_1 <- RunPCA(HE_sample_1, verbose = FALSE)
-HE_sample_1 <- RunUMAP(HE_sample_1, dims = 1:30, verbose = FALSE)
-HE_sample_1 <- FindNeighbors(HE_sample_1, dims = 1:30, verbose = FALSE)
-HE_sample_1 <- FindClusters(HE_sample_1, verbose = FALSE,resolution = 0.3) 
+HE_ON1 <- RunPCA(HE_ON1, verbose = FALSE)
+HE_ON1 <- RunUMAP(HE_ON1, dims = 1:30, verbose = FALSE)
+HE_ON1 <- FindNeighbors(HE_ON1, dims = 1:30, verbose = FALSE)
+HE_ON1 <- FindClusters(HE_ON1, verbose = FALSE,resolution = 0.3) 
 
-HE_control_1 <- RunPCA(HE_control_1, verbose = FALSE)
-HE_control_1 <- RunUMAP(HE_control_1, dims = 1:30, verbose = FALSE)
-HE_control_1 <- FindNeighbors(HE_control_1, dims = 1:30, verbose = FALSE)
-HE_control_1 <- FindClusters(HE_control_1, verbose = FALSE, resolution = 0.3)
+HE_ON2 <- RunPCA(HE_ON2, verbose = FALSE)
+HE_ON2 <- RunUMAP(HE_ON2, dims = 1:30, verbose = FALSE)
+HE_ON2 <- FindNeighbors(HE_ON2, dims = 1:30, verbose = FALSE)
+HE_ON2 <- FindClusters(HE_ON2, verbose = FALSE, resolution = 0.3)
 
-CR_sample_2 <- RunPCA(CR_sample_2, verbose = FALSE)
-CR_sample_2 <- RunUMAP(CR_sample_2, dims = 1:30, verbose = FALSE)
-CR_sample_2 <- FindNeighbors(CR_sample_2, dims = 1:30, verbose = FALSE)
-CR_sample_2 <- FindClusters(CR_sample_2, verbose = FALSE, resolution = 0.3)
+CR_TN1 <- RunPCA(CR_TN1, verbose = FALSE)
+CR_TN1 <- RunUMAP(CR_TN1, dims = 1:30, verbose = FALSE)
+CR_TN1 <- FindNeighbors(CR_TN1, dims = 1:30, verbose = FALSE)
+CR_TN1 <- FindClusters(CR_TN1, verbose = FALSE, resolution = 0.3)
 
-CR_control_2 <- RunPCA(CR_control_2, verbose = FALSE)
-CR_control_2 <- RunUMAP(CR_control_2, dims = 1:30, verbose = FALSE)
-CR_control_2 <- FindNeighbors(CR_control_2, dims = 1:30, verbose = FALSE)
-CR_control_2 <- FindClusters(CR_control_2, verbose = FALSE, resolution = 0.3) 
+CR_TN2 <- RunPCA(CR_TN2, verbose = FALSE)
+CR_TN2 <- RunUMAP(CR_TN2, dims = 1:30, verbose = FALSE)
+CR_TN2 <- FindNeighbors(CR_TN2, dims = 1:30, verbose = FALSE)
+CR_TN2 <- FindClusters(CR_TN2, verbose = FALSE, resolution = 0.3) 
 
 ##clusterS are shown prior to consequtive data integration
-DimPlot(HE_sample_1, reduction = "umap")
-DimPlot(HE_sample_2, reduction = "umap")
-DimPlot(CR_sample_1, reduction = "umap")
-DimPlot(CR_sample_2, reduction = "umap")
-DimPlot(HE_control_1, reduction = "umap")
-DimPlot(HE_control_2, reduction = "umap")
-DimPlot(CR_control_1, reduction = "umap")
-DimPlot(CR_control_2, reduction = "umap")
+DimPlot(HE_ON1, reduction = "umap")
+DimPlot(HE_TN1, reduction = "umap")
+DimPlot(CR_ON1, reduction = "umap")
+DimPlot(CR_TN1, reduction = "umap")
+DimPlot(HE_ON2, reduction = "umap")
+DimPlot(HE_TN2, reduction = "umap")
+DimPlot(CR_ON2, reduction = "umap")
+DimPlot(CR_TN2, reduction = "umap")
 
 
 ###Adding extra information to metadata 
-HE_sample_1$orig.ident <- "HE_ON1"
-CR_sample_1$orig.ident <- "CR_ON1"
-HE_sample_2$orig.ident <- "HE_TN1"
-CR_sample_2$orig.ident <- "CR_TN1"
+HE_ON1$orig.ident <- "HE_ON1"
+CR_ON1$orig.ident <- "CR_ON1"
+HE_TN1$orig.ident <- "HE_TN1"
+CR_TN1$orig.ident <- "CR_TN1"
 
-HE_control_1$orig.ident <- "HE_ON2"
-CR_control_1$orig.ident <- "CR_ON2"
-HE_control_2$orig.ident <- "HE_TN2"
-CR_control_2$orig.ident <- "CR_TN2"
+HE_ON2$orig.ident <- "HE_ON2"
+CR_ON2$orig.ident <- "CR_ON2"
+HE_TN2$orig.ident <- "HE_TN2"
+CR_TN2$orig.ident <- "CR_TN2"
 
 
-HE_sample_1$staining <- "HE"
-CR_sample_1$staining <- "CR"
-HE_sample_2$staining <- "HE"
-CR_sample_2$staining <- "CR"
+HE_ON1$staining <- "HE"
+CR_ON1$staining <- "CR"
+HE_TN1$staining <- "HE"
+CR_TN1$staining <- "CR"
 
-HE_control_1$staining <- "HE"
-CR_control_1$staining <- "CR"
-HE_control_2$staining <- "HE"
-CR_control_2$staining <- "CR"
+HE_ON2$staining <- "HE"
+CR_ON2$staining <- "CR"
+HE_TN2$staining <- "HE"
+CR_TN2$staining <- "CR"
 
 ###Integrating the consecutive slices
-SP1<-list(HE_sample_1, CR_sample_1)
-SP2<-list(HE_sample_2, CR_sample_2)
-CT1<-list(HE_control_1, CR_control_1)
-CT2<-list(HE_control_2, CR_control_2)
+SP1<-list(HE_ON1, CR_ON1)
+SP2<-list(HE_TN1, CR_TN1)
+CT1<-list(HE_ON2, CR_ON2)
+CT2<-list(HE_TN2, CR_TN2)
 
 
 ##DATA integration
@@ -264,8 +264,8 @@ DimPlot(CT2.integrated, reduction = "umap")
 #setwd()  Changing the directory to were you want to save the integrated objects
 saveRDS(SP1.integrated, "SP1.integrated.rds")
 saveRDS(SP1.integrated, "SP1.integrated.rds")
-saveRDS(SP1.integrated, "SP1.integrated.rds")
-saveRDS(SP1.integrated, "SP1.integrated.rds")
+saveRDS(CT1.integrated, "CT1.integrated.rds")
+saveRDS(CT2.integrated, "CT2.integrated.rds")
 
 
 ```

@@ -266,6 +266,98 @@ saveRDS(SP1.integrated, "SP1.integrated.rds")
 saveRDS(SP1.integrated, "SP1.integrated.rds")
 saveRDS(CT1.integrated, "CT1.integrated.rds")
 saveRDS(CT2.integrated, "CT2.integrated.rds")
+```
+# Step2
+**a)** snRNA-seq data preprocessing.
+**b)** snRNA-seq label transfering
+
+```r
+library(Seurat)
+
+##Changing the directory to where the integrated data is saved
+SP1.integrated <- readRDS("SP1.integrated.rds")
+SP2.integrated <- readRDS("SP2.integrated.rds")
+CT1.integrated <- readRDS("CT1.integrated.rds")
+CT2.integrated <- readRDS("CT2.integrated.rds")
+
+##Loading the labeled single nuclei datasets from prefrontal cortex of human non-AD and AD postmorem brain samples
+AD_Prefrontal <- readRDS(".../AD01104_Prefrontal cortex_SP.rds")
+H_Prefrontal <- readRDS(".../AD01102_Prefrontal cortex_CT.rds")
+
+#normalizing the single nuclei datasets and providing the PCA/UMAP infromation
+library(dplyr)
+AD_Prefrontal <- NormalizeData(AD_Prefrontal, verbose = FALSE) %>% RunPCA(verbose = FALSE) %>% 
+  RunUMAP(dims = 1:30)
+H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose = FALSE) %>% 
+  RunUMAP(dims = 1:30)
+
+# DefaultAssay(SP1.integrated) <- "integrated"
+# DefaultAssay(SP2.integrated) <- "integrated"
+# DefaultAssay(CT1.integrated) <- "integrated"
+# DefaultAssay(CT2.integrated) <- "integrated"
+
+#Finding the anchors between single nuclei dataset and integrated spatial transcriptomics data.
+SP1.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP1.integrated, normalization.method = "LogNormalize")
+SP2.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP2.integrated, normalization.method = "LogNormalize")
+CT1.anchors <- FindTransferAnchors(reference = H_Prefrontal, query = CT1.integrated, normalization.method = "LogNormalize")
+CT2.anchors <- FindTransferAnchors(reference = H_Prefrontal, query = CT2.integrated, normalization.method = "LogNormalize")
+
+
+
+##Transfering the identified anchors and consequently cell labels from single nuclei data and spatial transcriptomics data
+SP1.predictions.assay1 <- TransferData(anchorset = SP1.anchors, refdata = AD_Prefrontal$predicted.id, 
+                                   prediction.assay = TRUE, weight.reduction = SP1.integrated[["pca"]], dims = 1:30)
+SP1.predictions <- TransferData(anchorset = SP1.anchors, refdata = AD_Prefrontal$predicted.id, 
+                            dims = 1:50, weight.reduction = SP1.integrated[["pca"]])
+
+SP2.predictions.assay1 <- TransferData(anchorset = SP2.anchors, refdata = AD_Prefrontal$predicted.id, 
+                                       prediction.assay = TRUE, weight.reduction = SP2.integrated[["pca"]], dims = 1:30)
+SP2.predictions <- TransferData(anchorset = SP2.anchors, refdata = AD_Prefrontal$predicted.id, 
+                                dims = 1:50, weight.reduction = SP2.integrated[["pca"]])
+
+CT1.predictions.assay1 <- TransferData(anchorset = CT1.anchors, refdata = H_Prefrontal$predicted.id, 
+                                       prediction.assay = TRUE, weight.reduction = CT1.integrated[["pca"]], dims = 1:30)
+CT1.predictions <- TransferData(anchorset = CT1.anchors, refdata = H_Prefrontal$predicted.id, 
+                                dims = 1:50, weight.reduction = CT1.integrated[["pca"]])
+
+CT2.predictions.assay1 <- TransferData(anchorset = CT2.anchors, refdata = H_Prefrontal$predicted.id, 
+                                       prediction.assay = TRUE, weight.reduction = CT2.integrated[["pca"]], dims = 1:30)
+CT2.predictions <- TransferData(anchorset = CT2.anchors, refdata = H_Prefrontal$predicted.id, 
+                                dims = 1:50, weight.reduction = CT2.integrated[["pca"]])
+
+##Ading the information regarding the label transfering to medatada
+SP1.integrated[["prediction.labels"]] <- SP1.predictions.assay1
+SP1.integrated[["predictions"]] <- SP1.predictions$predicted.id
+SP2.integrated[["prediction.labels"]] <- SP2.predictions.assay1
+SP2.integrated[["predictions"]] <- SP2.predictions$predicted.id
+
+CT1.integrated[["prediction.labels"]] <- CT1.predictions.assay1
+CT1.integrated[["predictions"]] <- CT1.predictions$predicted.id
+CT2.integrated[["prediction.labels"]] <- CT2.predictions.assay1
+CT2.integrated[["predictions"]] <- CT2.predictions$predicted.id
+
+##Clusters befor label transfering
+DimPlot(SP1.integrated, reduction = "umap")
+DimPlot(SP2.integrated, reduction = "umap")
+DimPlot(CT1.integrated, reduction = "umap")
+DimPlot(CT2.integrated, reduction = "umap")
+
+
+##Changing the clusters from automatic clustering to label transfering
+SP1.integrated <- SetIdent(SP1.integrated, value = SP1.integrated$predictions)
+SP2.integrated <- SetIdent(SP2.integrated, value = SP2.integrated$predictions)
+CT1.integrated <- SetIdent(CT1.integrated, value = CT1.integrated$predictions)
+CT2.integrated <- SetIdent(CT2.integrated, value = CT2.integrated$predictions)
+
+##Ploting the transfered labels
+SpatialFeaturePlot(SP1.integrated, features = c("Astrocytes", "Oligodendrocytes", 
+                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
+SpatialFeaturePlot(SP2.integrated, features = c("Astrocytes", "Oligodendrocytes",
+                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
+SpatialFeaturePlot(CT1.integrated, features = c("Astrocytes", "Oligodendrocytes",
+                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
+SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes",
+                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
 
 
 ```

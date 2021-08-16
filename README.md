@@ -363,8 +363,8 @@ SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes"
 ```
 
 # Step3
-a) Integrating the same cell types from two brain regions
-b) comparing the transcriptomic profile of the same cell type in two different brain regions
+**a)** Integrating the same cell types from two brain regions
+**b)** comparing the transcriptomic profile of the same cell type in two different brain regions
 
 ```r
 library(Seurat)

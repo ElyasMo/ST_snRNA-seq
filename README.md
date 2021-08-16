@@ -5,9 +5,10 @@ Technical manuscript
 **a)** Data pre-processing.
 **b)** Data normalization.
 **c)** Dimentionality reduction and clustering.
+**d)** Consecutive slices data integration
 
+#### **a)** Data pre-processing.
 ```r
-
 library(Seurat)
 #####Importing the spatial data processed by spaceranger (spaceranger mkfastq/ spaceranger count)
 ## the consequtive slices were not integrated by spaceranger (spaceranger agr). 
@@ -92,7 +93,9 @@ HE_ON2 <- subset(HE_ON2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 70
 HE_ON1 <- subset(HE_ON1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
 HE_TN2 <- subset(HE_TN2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
 HE_TN1 <- subset(HE_TN1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-
+```
+#### **b)** Data normalization.
+```r
 ##Data normalization
 CR_ON2 <- NormalizeData(CR_ON2)
 CR_ON1 <- NormalizeData(CR_ON1)
@@ -124,8 +127,9 @@ HE_ON1<-ScaleData(HE_ON1, assay = "Spatial", verbose = FALSE, vars.to.regress = 
 HE_ON2<-ScaleData(HE_ON2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
 CR_TN1 <- ScaleData(CR_TN1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
 CR_TN2 <-ScaleData(CR_TN2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-
-
+```
+#### **c)** Dimentionality reduction and clustering.
+```r
 ## Preparing the required information for clustering and PCA/UMAP plots
 HE_TN1 <- RunPCA(HE_TN1, verbose = FALSE)
 HE_TN1 <- RunUMAP(HE_TN1, dims = 1:30, verbose = FALSE)
@@ -199,8 +203,9 @@ SpatialDimPlot(HE_ON2,label = TRUE, label.size = 3)
 SpatialDimPlot(HE_TN2,label = TRUE, label.size = 3)
 SpatialDimPlot(CR_ON2,label = TRUE, label.size = 3)
 SpatialDimPlot(CR_TN2,label = TRUE, label.size = 3)
-
-
+```
+#### **d)** Consecutive slices data integration
+```r
 ###Integrating the consecutive slices
 SP1<-list(HE_ON1, CR_ON1)
 SP2<-list(HE_TN1, CR_TN1)
@@ -272,6 +277,7 @@ saveRDS(CT2.integrated, "CT2.integrated.rds")
 **a)** snRNA-seq data preprocessing.
 **b)** snRNA-seq label transfering
 
+#### **a)** snRNA-seq data preprocessing.
 ```r
 library(Seurat)
 
@@ -296,7 +302,10 @@ H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose 
 # DefaultAssay(SP2.integrated) <- "integrated"
 # DefaultAssay(CT1.integrated) <- "integrated"
 # DefaultAssay(CT2.integrated) <- "integrated"
+```
 
+####**b)** snRNA-seq label transfering
+```r
 #Finding the anchors between single nuclei dataset and integrated spatial transcriptomics data.
 SP1.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP1.integrated, normalization.method = "LogNormalize")
 SP2.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP2.integrated, normalization.method = "LogNormalize")
@@ -367,6 +376,8 @@ SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes"
 **a)** Integrating the same cell types from two brain regions
 **b)** comparing the transcriptomic profile of the same cell type in two different brain regions
 
+
+####**a)** Integrating the same cell types from two brain regions
 ```r
 library(Seurat)
 SP1 <-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP1.integrated.rds")
@@ -455,8 +466,10 @@ CT.Neuron.integrated <- RunUMAP(CT.Neuron.integrated, dims = 1:30, verbose = FAL
 CT.Oligo.integrated <- ScaleData(CT.Oligo.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
 CT.Oligo.integrated <- RunPCA(CT.Oligo.integrated, verbose = FALSE)
 CT.Oligo.integrated <- RunUMAP(CT.Oligo.integrated, dims = 1:30, verbose = FALSE)
+```
 
-
+#### **b)** comparing the transcriptomic profile of the same cell type in two different brain regions
+```r
 library(ggplot2)
 
 ##Looking at the UMAP of each cell type in each slice seperately

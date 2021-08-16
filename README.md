@@ -304,7 +304,7 @@ H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose 
 # DefaultAssay(CT2.integrated) <- "integrated"
 ```
 
-####**b)** snRNA-seq label transfering
+#### **b)** snRNA-seq label transfering
 ```r
 #Finding the anchors between single nuclei dataset and integrated spatial transcriptomics data.
 SP1.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP1.integrated, normalization.method = "LogNormalize")

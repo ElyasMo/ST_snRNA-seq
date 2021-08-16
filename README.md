@@ -167,7 +167,7 @@ CR_TN2 <- RunUMAP(CR_TN2, dims = 1:30, verbose = FALSE)
 CR_TN2 <- FindNeighbors(CR_TN2, dims = 1:30, verbose = FALSE)
 CR_TN2 <- FindClusters(CR_TN2, verbose = FALSE, resolution = 0.3) 
 
-##clusterS are shown prior to consequtive data integration
+##clusters are shown prior to consequtive data integration
 DimPlot(HE_ON1, reduction = "umap")
 DimPlot(HE_TN1, reduction = "umap")
 DimPlot(CR_ON1, reduction = "umap")
@@ -252,7 +252,7 @@ CT2.integrated <- RunUMAP(CT2.integrated, dims = 1:30, verbose = FALSE)
 CT2.integrated <- FindNeighbors(CT2.integrated, dims = 1:30, verbose = FALSE)
 CT2.integrated <- FindClusters(CT2.integrated, verbose = FALSE, resolution = 0.3)
 
-##clusterS are shown after consequtive data integration
+##cluster visualization
 DimPlot(SP1.integrated, reduction = "umap")
 DimPlot(SP2.integrated, reduction = "umap")
 DimPlot(CT1.integrated, reduction = "umap")

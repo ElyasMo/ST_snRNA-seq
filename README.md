@@ -167,17 +167,6 @@ CR_TN2 <- RunUMAP(CR_TN2, dims = 1:30, verbose = FALSE)
 CR_TN2 <- FindNeighbors(CR_TN2, dims = 1:30, verbose = FALSE)
 CR_TN2 <- FindClusters(CR_TN2, verbose = FALSE, resolution = 0.3) 
 
-##clusters are shown prior to consequtive data integration
-SpatialDimPlot(HE_ON1,label = TRUE, label.size = 3)
-SpatialDimPlot(HE_TN1,label = TRUE, label.size = 3)
-SpatialDimPlot(CR_ON1,label = TRUE, label.size = 3)
-SpatialDimPlot(CR_TN1,label = TRUE, label.size = 3)
-SpatialDimPlot(HE_ON2,label = TRUE, label.size = 3)
-SpatialDimPlot(HE_TN2,label = TRUE, label.size = 3)
-SpatialDimPlot(CR_ON2,label = TRUE, label.size = 3)
-SpatialDimPlot(CR_TN2,label = TRUE, label.size = 3)
-
-
 ###Adding extra information to metadata 
 HE_ON1$orig.ident <- "HE_ON1"
 CR_ON1$orig.ident <- "CR_ON1"
@@ -199,6 +188,18 @@ HE_ON2$staining <- "HE"
 CR_ON2$staining <- "CR"
 HE_TN2$staining <- "HE"
 CR_TN2$staining <- "CR"
+
+
+##clusters are shown prior to consequtive data integration
+SpatialDimPlot(HE_ON1,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_TN1,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_ON1,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_TN1,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_ON2,label = TRUE, label.size = 3)
+SpatialDimPlot(HE_TN2,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_ON2,label = TRUE, label.size = 3)
+SpatialDimPlot(CR_TN2,label = TRUE, label.size = 3)
+
 
 ###Integrating the consecutive slices
 SP1<-list(HE_ON1, CR_ON1)

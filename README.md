@@ -377,7 +377,7 @@ SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes"
 **b)** comparing the transcriptomic profile of the same cell type in two different brain regions
 
 
-####**a)** Integrating the same cell types from two brain regions
+#### **a)** Integrating the same cell types from two brain regions
 ```r
 library(Seurat)
 SP1 <-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP1.integrated.rds")

@@ -274,6 +274,12 @@ for (objs in integrated_obj){
                            pt.size.factor = 1.6, ncol = 2, crop = TRUE))
 }
 
+setwd("/mnt/data1/elyas/10X_Visuim/data/rds/")
+
+saveRDS(SP1.integrated, "SP1.labels.rds")
+saveRDS(SP2.integrated, "SP2.labels.rds")
+saveRDS(CT1.integrated, "CT1.labels.rds")
+saveRDS(CT2.integrated, "CT2.labels.rds")
 ```
 
 # Step3

@@ -159,7 +159,7 @@ for (obj in integrated_obj){
 ##Saving the integrated data for further analysis
 
 #setwd()  Changing the directory to were you want to save the integrated objects
-setwd("D:/Poland/PHD/spatial/Processed_data/")
+setwd("//Processed_data/")
 saveRDS(integrated_obj[[1]], "SP1.integrated.rds")
 saveRDS(integrated_obj[[2]], "CT1.integrated.rds")
 saveRDS(integrated_obj[[3]], "SP2.integrated.rds")

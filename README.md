@@ -198,6 +198,7 @@ H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose 
 #### **b)** snRNA-seq label transfering
 ```r
 #Finding the anchors between single nuclei dataset and integrated spatial transcriptomics data.
+
 SP1.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP1.integrated, normalization.method = "LogNormalize")
 SP2.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP2.integrated, normalization.method = "LogNormalize")
 CT1.anchors <- FindTransferAnchors(reference = H_Prefrontal, query = CT1.integrated, normalization.method = "LogNormalize")
@@ -227,6 +228,7 @@ CT2.predictions <- TransferData(anchorset = CT2.anchors, refdata = H_Prefrontal$
                                 dims = 1:50, weight.reduction = CT2.integrated[["pca"]])
 
 ##Ading the information regarding the label transfering to medatada
+
 SP1.integrated[["prediction.labels"]] <- SP1.predictions.assay1
 SP1.integrated[["predictions"]] <- SP1.predictions$predicted.id
 SP2.integrated[["prediction.labels"]] <- SP2.predictions.assay1
@@ -237,29 +239,30 @@ CT1.integrated[["predictions"]] <- CT1.predictions$predicted.id
 CT2.integrated[["prediction.labels"]] <- CT2.predictions.assay1
 CT2.integrated[["predictions"]] <- CT2.predictions$predicted.id
 
+
 ##Clusters befor label transfering
-DimPlot(SP1.integrated, reduction = "umap")
-DimPlot(SP2.integrated, reduction = "umap")
-DimPlot(CT1.integrated, reduction = "umap")
-DimPlot(CT2.integrated, reduction = "umap")
+integrated_obj <- list(SP1.integrated,SP2.integrated,CT1.integrated,CT2.integrated)
+
+for (objs in integrated_obj){
+  print(SpatialDimPlot(objs))
+}
 
 
 ##Changing the clusters from automatic clustering to label transfering
-SP1.integrated <- SetIdent(SP1.integrated, value = SP1.integrated$predictions)
-SP2.integrated <- SetIdent(SP2.integrated, value = SP2.integrated$predictions)
-CT1.integrated <- SetIdent(CT1.integrated, value = CT1.integrated$predictions)
-CT2.integrated <- SetIdent(CT2.integrated, value = CT2.integrated$predictions)
+num <- c(1:4)
+
+for (nums in num){
+  integrated_obj[[nums]] <- SetIdent(integrated_obj[[nums]], value = integrated_obj[[nums]]$predictions)
+}
+
 
 ##Ploting the transfered labels
-SpatialFeaturePlot(SP1.integrated, features = c("Astrocytes", "Oligodendrocytes", 
-                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
-SpatialFeaturePlot(SP2.integrated, features = c("Astrocytes", "Oligodendrocytes",
-                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
-SpatialFeaturePlot(CT1.integrated, features = c("Astrocytes", "Oligodendrocytes",
-                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
-SpatialFeaturePlot(CT2.integrated, features = c("Astrocytes", "Oligodendrocytes",
-                                                "Excitatory neurons"), pt.size.factor = 1.6, ncol = 2, crop = TRUE)
-
+for (objs in integrated_obj){
+  print(SpatialFeaturePlot(objs, 
+                           features = c("Astrocytes", "Oligodendrocytes", 
+                                                        "Excitatory neurons"),
+                           pt.size.factor = 1.6, ncol = 2, crop = TRUE))
+}
 
 ```
 

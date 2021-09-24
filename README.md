@@ -189,10 +189,10 @@ AD_Prefrontal <- NormalizeData(AD_Prefrontal, verbose = FALSE) %>% RunPCA(verbos
 H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose = FALSE) %>% 
   RunUMAP(dims = 1:30)
 
-# DefaultAssay(SP1.integrated) <- "integrated"
-# DefaultAssay(SP2.integrated) <- "integrated"
-# DefaultAssay(CT1.integrated) <- "integrated"
-# DefaultAssay(CT2.integrated) <- "integrated"
+DefaultAssay(SP1.integrated) <- "integrated"
+DefaultAssay(SP2.integrated) <- "integrated"
+DefaultAssay(CT1.integrated) <- "integrated"
+DefaultAssay(CT2.integrated) <- "integrated"
 ```
 
 #### **b)** snRNA-seq label transfering

@@ -175,18 +175,18 @@ saveRDS(integrated_obj[[4]], "CT2.integrated.rds")
 
 library(Seurat)
 ##Changing the directory to where the integrated data is saved
-setwd("/mnt/data1/elyas/10X_Visuim/data/rds/")
+setwd("//Processed_data/")
 
 
-SP1.integrated <- readRDS("SP1.integrated_New.rds")
-SP2.integrated <- readRDS("SP2.integrated_New.rds")
-CT1.integrated <- readRDS("CT1.integrated_New.rds")
-CT2.integrated <- readRDS("CT2.integrated_New.rds")
+SP1.integrated <- readRDS("SP1.integrated.rds")
+SP2.integrated <- readRDS("SP2.integrated.rds")
+CT1.integrated <- readRDS("CT1.integrated.rds")
+CT2.integrated <- readRDS("CT2.integrated.rds")
 
 
 ##Loading the labeled single nuclei datasets from prefrontal cortex of human non-AD and AD postmorem brain samples
-AD_Prefrontal <- readRDS("/mnt/data1/elyas/10X_Visuim/data/rds/AD01104_Prefrontal cortex_SP.rds")
-H_Prefrontal <- readRDS("/mnt/data1/elyas/10X_Visuim/data/rds/AD01102_Prefrontal cortex_CT.rds")
+AD_Prefrontal <- readRDS("//rds/AD01104_Prefrontal cortex_SP.rds")
+H_Prefrontal <- readRDS("//rds/AD01102_Prefrontal cortex_CT.rds")
 
 #normalizing the single nuclei datasets and providing the PCA/UMAP infromation
 library(dplyr)

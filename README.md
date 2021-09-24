@@ -14,14 +14,14 @@ library(Seurat)
  
 
 #Importing the required paths for the seurat objects which includes .h5 and spatial directory
-path1 <- "D:/Poland/PHD/spatial/Processed_data//P1_ON1_A/"
-path2 <- "D:/Poland/PHD/spatial/Processed_data//P1_ON2_A/"
-path3 <- "D:/Poland/PHD/spatial/Processed_data//P2_ON1_B/"
-path4 <- "D:/Poland/PHD/spatial/Processed_data//P2_ON2_B/"
-path5 <- "D:/Poland/PHD/spatial/Processed_data//P3_TN1_A/"
-path6 <- "D:/Poland/PHD/spatial/Processed_data//P3_TN2_A/"
-path7 <- "D:/Poland/PHD/spatial/Processed_data//P4_TN1_B/"
-path8 <- "D:/Poland/PHD/spatial/Processed_data//P4_TN2_B/"
+path1 <- "//P1_ON1_A/"
+path2 <- "//P1_ON2_A/"
+path3 <- "//P2_ON1_B/"
+path4 <- "//P2_ON2_B/"
+path5 <- "//P3_TN1_A/"
+path6 <- "//P3_TN2_A/"
+path7 <- "//P4_TN1_B/"
+path8 <- "//P4_TN2_B/"
   
 #Making a list of the paths
 paths <- c(path1,path2,path3,path4,path5,path6,path7,path8)  

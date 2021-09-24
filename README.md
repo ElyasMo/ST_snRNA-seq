@@ -10,123 +10,81 @@ Technical manuscript
 #### **a)** Data pre-processing.
 ```r
 library(Seurat)
-#####Importing the spatial data processed by spaceranger (spaceranger mkfastq/ spaceranger count)
-## the consequtive slices were not integrated by spaceranger (spaceranger agr). 
 
-setwd("Directory")
-Directory="..."
-CR_TN1<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                             assay = "Spatial",
-                             slice = "CR_TN1",
-                             filter.matrix = TRUE,
-                             to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-CR_TN2<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                              assay = "Spatial",
-                              slice = "CR_TN2",
-                              filter.matrix = TRUE,
-                              to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-HE_TN1<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                             assay = "Spatial",
-                             slice = "HE_TN1",
-                             filter.matrix = TRUE,
-                             to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-HE_TN2<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                              assay = "Spatial",
-                              slice = "HE_TN2",
-                              filter.matrix = TRUE,
-                              to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-CR_ON1<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                             assay = "Spatial",
-                             slice = "CR_ON1",
-                             filter.matrix = TRUE,
-                             to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-CR_ON2<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                              assay = "Spatial",
-                              slice = "CR_ON2",
-                              filter.matrix = TRUE,
-                              to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-HE_ON1<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                             assay = "Spatial",
-                             slice = "HE_ON1",
-                             filter.matrix = TRUE,
-                             to.upper = FALSE)
-setwd("Directory")
-Directory="..."
-HE_ON2<-Load10X_Spatial(Directory,filename = "filtered_feature_bc_matrix.h5",
-                              assay = "Spatial",
-                              slice = "HE_ON2",
-                              filter.matrix = TRUE,
-                              to.upper = FALSE)
+library(Seurat)
+ 
 
+#Importing the required paths for the seurat objects which includes .h5 and spatial directory
+path1 <- "D:/Poland/PHD/spatial/Processed_data//P1_ON1_A/"
+path2 <- "D:/Poland/PHD/spatial/Processed_data//P1_ON2_A/"
+path3 <- "D:/Poland/PHD/spatial/Processed_data//P2_ON1_B/"
+path4 <- "D:/Poland/PHD/spatial/Processed_data//P2_ON2_B/"
+path5 <- "D:/Poland/PHD/spatial/Processed_data//P3_TN1_A/"
+path6 <- "D:/Poland/PHD/spatial/Processed_data//P3_TN2_A/"
+path7 <- "D:/Poland/PHD/spatial/Processed_data//P4_TN1_B/"
+path8 <- "D:/Poland/PHD/spatial/Processed_data//P4_TN2_B/"
+  
+#Making a list of the paths
+paths <- c(path1,path2,path3,path4,path5,path6,path7,path8)  
+
+#Creating the required lists to be added to metadata
+slices <- as.character(c("P1_ON1_A","P1_ON2_A", "P2_ON1_B", "P2_ON2_B", "P3_TN1_A", "P3_TN2_A", "P4_TN1_B", "P4_TN2_B"))
+staining <- as.character(c("HE","CR", "HE","CR", "HE","CR", "HE","CR"))
+Region <- as.character(c("Orbitofrontal","Orbitofrontal","Orbitofrontal","Orbitofrontal","Temporal","Temporal","Temporal","Temporal"))
+Order <- as.character(c("First_Slice", "Second_Slice","First_Slice", "Second_Slice","First_Slice", "Second_Slice","First_Slice", "Second_Slice"))
+
+#Reading in the Seurat objects
+Seurat_Objects <-mapply(function(X,Y){
+  Load10X_Spatial(X,filename = "filtered_feature_bc_matrix.h5",
+                                                      assay = "Spatial",
+                                                      slice = Y,
+                                                      filter.matrix = TRUE,
+                                                      to.upper = FALSE)},X=paths,Y=slices, USE.NAMES = FALSE) 
+
+#Adding extra information to metadata 
+nums=1
+num <- c(1:8)
+for (nums in num){
+  Seurat_Objects[[nums]][["orig.ident"]] <- slices[nums]
+  Seurat_Objects[[nums]][["staining"]] <- staining[nums]
+  Seurat_Objects[[nums]][["Region"]] <- Region[nums]
+  Seurat_Objects[[nums]][["Order"]] <- Order[nums]
+  
+}
 
 
 ##adding the percentage of MT genes to metadata
-CR_ON2[["percent.mt"]] <- PercentageFeatureSet(CR_ON2, pattern = "^MT-")
-CR_TN2[["percent.mt"]] <- PercentageFeatureSet(CR_TN2, pattern = "^MT-")
-CR_ON1[["percent.mt"]] <- PercentageFeatureSet(CR_ON1, pattern = "^MT-")
-CR_TN1[["percent.mt"]] <- PercentageFeatureSet(CR_TN1, pattern = "^MT-")
-HE_ON2[["percent.mt"]] <- PercentageFeatureSet(HE_ON2, pattern = "^MT-")
-HE_TN2[["percent.mt"]] <- PercentageFeatureSet(HE_TN2, pattern = "^MT-")
-HE_ON1[["percent.mt"]] <- PercentageFeatureSet(HE_ON1, pattern = "^MT-")
-HE_TN1[["percent.mt"]] <- PercentageFeatureSet(HE_TN1, pattern = "^MT-")
+Seurat_Objects <- lapply(Seurat_Objects, function(X){
+  X[["percent.mt"]] <- PercentageFeatureSet(X, pattern = "^MT-");X})
 
-
-
-##Filtering the metadata basd on various criteria
-CR_TN2 <- subset(CR_TN2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-CR_TN1 <- subset(CR_TN1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
-CR_ON2 <- subset(CR_ON2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-CR_ON1 <- subset(CR_ON1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15 )
-HE_ON2 <- subset(HE_ON2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_ON1 <- subset(HE_ON1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_TN2 <- subset(HE_TN2, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
-HE_TN1 <- subset(HE_TN1, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+##Filtering the metadata based on various criteria
+Seurat_Objects <- lapply(Seurat_Objects, function(X){
+  subset(X, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15);X})
 ```
 #### **b)** Data normalization.
 ```r
+
 ##Data normalization
-CR_ON2 <- NormalizeData(CR_ON2)
-CR_ON1 <- NormalizeData(CR_ON1)
-CR_TN2 <- NormalizeData(CR_TN2)
-CR_TN1 <- NormalizeData(CR_TN1)
-HE_ON2 <- NormalizeData(HE_ON2)
-HE_ON1 <- NormalizeData(HE_ON1)
-HE_TN2 <- NormalizeData(HE_TN2)
-HE_TN1 <- NormalizeData(HE_TN1)
+Seurat_Objects <- lapply(Seurat_Objects, function(X){
+  NormalizeData(X);X})
+
 
 
 ##Finidng variable features
-CR_ON2 <- FindVariableFeatures(CR_ON2, selection.method = "vst")
-CR_ON1 <- FindVariableFeatures(CR_ON1, selection.method = "vst")
-CR_TN2 <- FindVariableFeatures(CR_TN2, selection.method = "vst")
-CR_TN1 <- FindVariableFeatures(CR_TN1, selection.method = "vst")
-HE_ON2 <- FindVariableFeatures(HE_ON2, selection.method = "vst")
-HE_ON1 <- FindVariableFeatures(HE_ON1, selection.method = "vst")
-HE_TN2 <- FindVariableFeatures(HE_TN2, selection.method = "vst")
-HE_TN1 <- FindVariableFeatures(HE_TN1, selection.method = "vst")
+nums=1
+num <- c(1:8)
+for (nums in num){
+  Seurat_Objects[[nums]] <-  FindVariableFeatures(Seurat_Objects[[nums]], selection.method = "vst")
+}
 
 
-##Scaling the data and regressing out the MT genes
-HE_TN1<-ScaleData(HE_TN1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_TN2<-ScaleData(HE_TN2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_ON1 <- ScaleData(CR_ON1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_ON2<-ScaleData(CR_ON2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_ON1<-ScaleData(HE_ON1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-HE_ON2<-ScaleData(HE_ON2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_TN1 <- ScaleData(CR_TN1, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
-CR_TN2 <-ScaleData(CR_TN2, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")
+##Scaling the data and regressing out the MT genes, 
+# If you want to use the information from single slices for consecutive slices data integration,
+# it is better to avoid scaling the data at this point and do this during the data integration
+# To do so, connsider do.scale=FALSE and do.center=FALSE in the ScaleData function
+Seurat_Objects <- lapply(Seurat_Objects, function(X){
+  ScaleData(X, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt")})
+  
 ```
 #### **c)** Dimentionality reduction and clustering.
 ```r

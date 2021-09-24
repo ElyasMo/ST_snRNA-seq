@@ -165,10 +165,10 @@ saveRDS(integrated_obj[[3]], "SP2.integrated.rds")
 saveRDS(integrated_obj[[4]], "CT2.integrated.rds")
 ```
 # Step2
-**a)** snRNA-seq data preprocessing.
+**a)** snRNA-seq data pre-processing.
 **b)** snRNA-seq label transfering
 
-#### **a)** snRNA-seq data preprocessing.
+#### **a)** snRNA-seq data pre-processing.
 ```r
 library(Seurat)
 

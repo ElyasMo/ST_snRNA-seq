@@ -12,7 +12,6 @@ Technical manuscript
 
 library(Seurat)
  
-
 #Importing the required paths for the seurat objects which includes .h5 and spatial directory
 path1 <- "//P1_ON1_A/"
 path2 <- "//P1_ON2_A/"
@@ -24,13 +23,13 @@ path7 <- "//P4_TN1_B/"
 path8 <- "//P4_TN2_B/"
   
 #Making a list of the paths
-paths <- c(path1,path2,path3,path4,path5,path6,path7,path8)  
+paths <- c(path1, path2, path3, path4, path5, path6, path7, path8)  
 
 #Creating the required lists to be added to metadata
-slices <- as.character(c("P1_ON1_A","P1_ON2_A", "P2_ON1_B", "P2_ON2_B", "P3_TN1_A", "P3_TN2_A", "P4_TN1_B", "P4_TN2_B"))
+slices <- as.character(c("P1_ON1_A", "P1_ON2_A", "P2_ON1_B", "P2_ON2_B", "P3_TN1_A", "P3_TN2_A", "P4_TN1_B", "P4_TN2_B"))
 staining <- as.character(c("HE","CR", "HE","CR", "HE","CR", "HE","CR"))
-Region <- as.character(c("Orbitofrontal","Orbitofrontal","Orbitofrontal","Orbitofrontal","Temporal","Temporal","Temporal","Temporal"))
-Order <- as.character(c("First_Slice", "Second_Slice","First_Slice", "Second_Slice","First_Slice", "Second_Slice","First_Slice", "Second_Slice"))
+Region <- as.character(c("Orbitofrontal", "Orbitofrontal", "Orbitofrontal", "Orbitofrontal", "Temporal", "Temporal", "Temporal", "Temporal"))
+Order <- as.character(c("First_Slice", "Second_Slice", "First_Slice", "Second_Slice", "First_Slice", "Second_Slice", "First_Slice", "Second_Slice"))
 
 #Reading in the Seurat objects
 Seurat_Objects <-mapply(function(X,Y){
@@ -47,25 +46,27 @@ for (nums in num){
   Seurat_Objects[[nums]][["orig.ident"]] <- slices[nums]
   Seurat_Objects[[nums]][["staining"]] <- staining[nums]
   Seurat_Objects[[nums]][["Region"]] <- Region[nums]
-  Seurat_Objects[[nums]][["Order"]] <- Order[nums]
-  
+  Seurat_Objects[[nums]][["Order"]] <- Order[nums] 
 }
 
 
 ##adding the percentage of MT genes to metadata
 Seurat_Objects <- lapply(Seurat_Objects, function(X){
-  X[["percent.mt"]] <- PercentageFeatureSet(X, pattern = "^MT-");X})
+  X[["percent.mt"]] <- PercentageFeatureSet(X, pattern = "^MT-");X
+  })
 
 ##Filtering the metadata based on various criteria
 Seurat_Objects <- lapply(Seurat_Objects, function(X){
-  X<- subset(X, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)})
+  X <- subset(X, subset = nFeature_Spatial > 200 & nFeature_Spatial < 7000 & percent.mt < 15)
+  })
   
 ```
 #### **b)** Data normalization.
 ```r
 ##Data normalization
 Seurat_Objects <- lapply(Seurat_Objects, function(X){
-  X<- NormalizeData(X)})
+  X <- NormalizeData(X)
+  })
 
 
 
@@ -73,7 +74,7 @@ Seurat_Objects <- lapply(Seurat_Objects, function(X){
 nums=1
 num <- c(1:8)
 for (nums in num){
-  Seurat_Objects[[nums]] <-  FindVariableFeatures(Seurat_Objects[[nums]], selection.method = "vst")
+  Seurat_Objects[[nums]] <- FindVariableFeatures(Seurat_Objects[[nums]], selection.method = "vst")
 }
 
 
@@ -82,10 +83,10 @@ for (nums in num){
 # it is better to avoid scaling the data at this point and do this during the data integration
 # To do so, connsider do.scale=FALSE and do.center=FALSE in the ScaleData function
 Seurat_Objects <- lapply(Seurat_Objects, function(X){
-  ScaleData(X, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt",do.scale = FALSE, do.center = FALSE)})
+  ScaleData(X, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt",do.scale = FALSE, do.center = FALSE)
+  })
 
-
-  
+ 
 ```
 #### **c)** Dimentionality reduction and clustering.
 ```r
@@ -97,7 +98,6 @@ Seurat_Objects <- lapply(Seurat_Objects, function(X){
   X <- RunUMAP(X, dims = 1:30, verbose = FALSE)
   X <- FindNeighbors(X, dims = 1:30, verbose = FALSE)
   X <- FindClusters(X, verbose = FALSE,resolution = 0.3) 
-  
 })
 
 
@@ -110,10 +110,10 @@ for (obj in Seurat_Objects){
 #### **d)** Consecutive slices data integration
 ```r
 ###Integrating the consecutive slices
-SP1<-list(Seurat_Objects[[1]], Seurat_Objects[[2]])
-CT1<-list(Seurat_Objects[[3]], Seurat_Objects[[4]])
-SP2<-list(Seurat_Objects[[5]], Seurat_Objects[[6]])
-CT2<-list(Seurat_Objects[[7]], Seurat_Objects[[8]])
+SP1 <- list(Seurat_Objects[[1]], Seurat_Objects[[2]])
+CT1 <- list(Seurat_Objects[[3]], Seurat_Objects[[4]])
+SP2 <- list(Seurat_Objects[[5]], Seurat_Objects[[6]])
+CT2 <- list(Seurat_Objects[[7]], Seurat_Objects[[8]])
 
 
 ##DATA integration
@@ -127,6 +127,7 @@ CT1.anchors <- FindIntegrationAnchors(object.list = CT1, dims = 1:30, anchor.fea
                                       scale = TRUE, normalization.method = "LogNormalize")
 CT2.anchors <- FindIntegrationAnchors(object.list = CT2, dims = 1:30, anchor.features = 4000,
                                       scale = TRUE, normalization.method = "LogNormalize")
+
 
 #Integratiing consequtive slices based on identified anchors
 integrated_obj <- list(

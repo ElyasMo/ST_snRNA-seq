@@ -162,8 +162,8 @@ for (obj in integrated_obj){
 #setwd()  Changing the directory to were you want to save the integrated objects
 setwd("//Processed_data/")
 saveRDS(integrated_obj[[1]], "SP1.integrated.rds")
-saveRDS(integrated_obj[[2]], "CT1.integrated.rds")
-saveRDS(integrated_obj[[3]], "SP2.integrated.rds")
+saveRDS(integrated_obj[[2]], "SP2.integrated.rds")
+saveRDS(integrated_obj[[3]], "CT1.integrated.rds")
 saveRDS(integrated_obj[[4]], "CT2.integrated.rds")
 
 ```

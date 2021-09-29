@@ -119,13 +119,13 @@ CT2 <- list(Seurat_Objects[[7]], Seurat_Objects[[8]])
 ##DATA integration
 #Finding anchors between consequtive slices. Scale is TRUE because as we mentioned
 # for the purpose of data integration, we leave the data unscaled in single slices.
-SP1.anchors <- FindIntegrationAnchors(object.list = SP1, dims = 1:30, anchor.features = 4000,
+SP1.anchors <- FindIntegrationAnchors(object.list = SP1, dims = 1:30, 
                                       scale = TRUE, normalization.method = "LogNormalize")
-SP2.anchors <- FindIntegrationAnchors(object.list = SP2, dims = 1:30, anchor.features = 4000,
+SP2.anchors <- FindIntegrationAnchors(object.list = SP2, dims = 1:30, 
                                       scale = TRUE, normalization.method = "LogNormalize")
-CT1.anchors <- FindIntegrationAnchors(object.list = CT1, dims = 1:30, anchor.features = 4000,
+CT1.anchors <- FindIntegrationAnchors(object.list = CT1, dims = 1:30, 
                                       scale = TRUE, normalization.method = "LogNormalize")
-CT2.anchors <- FindIntegrationAnchors(object.list = CT2, dims = 1:30, anchor.features = 4000,
+CT2.anchors <- FindIntegrationAnchors(object.list = CT2, dims = 1:30, 
                                       scale = TRUE, normalization.method = "LogNormalize")
 
 

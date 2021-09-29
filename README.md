@@ -343,40 +343,22 @@ CT.Neuron.anchors <- FindIntegrationAnchors(object.list = CT.Neuron.list, dims =
 CT.Oligo.anchors <- FindIntegrationAnchors(object.list = CT.Oligo.list, dims = 1:30, scale = FALSE, anchor.features = 3000)
 
 
+integrated_cells <- list(
 SP.Astro.integrated <- IntegrateData(anchorset = SP.Astro.anchors, dims = 1:30)
 SP.Neuron.integrated <- IntegrateData(anchorset = SP.Neuron.anchors, dims = 1:30)
 SP.Oligo.integrated <- IntegrateData(anchorset = SP.Oligo.anchors, dims = 1:30)
 
 CT.Astro.integrated <- IntegrateData(anchorset = CT.Astro.anchors, dims = 1:30)
 CT.Neuron.integrated <- IntegrateData(anchorset = CT.Neuron.anchors, dims = 1:30)
-CT.Oligo.integrated <- IntegrateData(anchorset = CT.Oligo.anchors, dims = 1:30)
+CT.Oligo.integrated <- IntegrateData(anchorset = CT.Oligo.anchors, dims = 1:30))
 
 
+integrated_cells <- lapply(integrated_cells, function(X){
+ X <- ScaleData(X, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
+ X <- RunPCA(X, verbose = FALSE)
+ X <- RunUMAP(X, dims = 1:30, verbose = FALSE)
+}
 
-
-SP.Astro.integrated <- ScaleData(SP.Astro.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-SP.Astro.integrated <- RunPCA(SP.Astro.integrated, verbose = FALSE)
-SP.Astro.integrated <- RunUMAP(SP.Astro.integrated, dims = 1:30, verbose = FALSE)
-
-SP.Neuron.integrated <- ScaleData(SP.Neuron.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-SP.Neuron.integrated <- RunPCA(SP.Neuron.integrated, verbose = FALSE)
-SP.Neuron.integrated <- RunUMAP(SP.Neuron.integrated, dims = 1:30, verbose = FALSE)
-
-SP.Oligo.integrated <- ScaleData(SP.Oligo.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-SP.Oligo.integrated <- RunPCA(SP.Oligo.integrated, verbose = FALSE)
-SP.Oligo.integrated <- RunUMAP(SP.Oligo.integrated, dims = 1:30, verbose = FALSE)
-
-CT.Astro.integrated <- ScaleData(CT.Astro.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-CT.Astro.integrated <- RunPCA(CT.Astro.integrated, verbose = FALSE)
-CT.Astro.integrated <- RunUMAP(CT.Astro.integrated, dims = 1:30, verbose = FALSE)
-
-CT.Neuron.integrated <- ScaleData(CT.Neuron.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-CT.Neuron.integrated <- RunPCA(CT.Neuron.integrated, verbose = FALSE)
-CT.Neuron.integrated <- RunUMAP(CT.Neuron.integrated, dims = 1:30, verbose = FALSE)
-
-CT.Oligo.integrated <- ScaleData(CT.Oligo.integrated, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-CT.Oligo.integrated <- RunPCA(CT.Oligo.integrated, verbose = FALSE)
-CT.Oligo.integrated <- RunUMAP(CT.Oligo.integrated, dims = 1:30, verbose = FALSE)
 ```
 
 #### **b)** comparing the transcriptomic profile of the same cell type in two different brain regions
@@ -384,44 +366,22 @@ CT.Oligo.integrated <- RunUMAP(CT.Oligo.integrated, dims = 1:30, verbose = FALSE
 library(ggplot2)
 
 ##Looking at the UMAP of each cell type in each slice seperately
-DimPlot(SP.Astro.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Astrocytes_AD")
-DimPlot(SP.Neuron.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Excitatory Neurons_AD")
-DimPlot(SP.Oligo.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Oligodendrocytes_AD")
 
-DimPlot(CT.Astro.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Astrocytes")
-DimPlot(CT.Neuron.integrated, group.by = "region", split.by = "orig.ident")+ ggtitle("Excitatory Neurons")
-DimPlot(CT.Oligo.integrated, group.by = "region", split.by = "orig.ident")+ggtitle("Oligodendrocytes")
+for (obj in integrated_cells){
+  print(SpatialDimPlot(obj,label = TRUE, label.size = 3))
+}
 
 
 ##Comparing cell types in consecutive slices
-p1 <- DimPlot(SP.Astro.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Astrocytes_AD")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p2 <-DimPlot(SP.Neuron.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Excitatory Neurons_AD")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p3 <-DimPlot(SP.Oligo.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Oligodendrocytes_AD")+theme(plot.title = element_text(size = 15, face = "bold"))
 
-p4 <-DimPlot(CT.Astro.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Astrocytes")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p5 <-DimPlot(CT.Neuron.integrated, group.by = "orig.ident", split.by = "region")+ ggtitle("Excitatory Neurons")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p6 <-DimPlot(CT.Oligo.integrated, group.by = "orig.ident", split.by = "region")+ggtitle("Oligodendrocytes")+theme(plot.title = element_text(size = 15, face = "bold"))
-
-library(ggrepel)
-library(ggpubr)
-
-ggarrange(p1, p2,p3,p4, p5,p6,
-                    ncol = 3, nrow = 2)
-
+for (obj in integrated_cells){
+  print(DimPlot(obj, group.by = "orig.ident", split.by = "region"))
+}
+ 
 
 ##Comparing cell types between brain regions
-p1 <- DimPlot(SP.Astro.integrated, group.by = "region")+ ggtitle("Astrocytes1")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p2 <-DimPlot(SP.Neuron.integrated, group.by = "region")+ ggtitle("Excitatory Neurons1")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p3 <-DimPlot(SP.Oligo.integrated, group.by = "region")+ ggtitle("Oligodendrocytes1")+theme(plot.title = element_text(size = 15, face = "bold"))
-
-p4 <-DimPlot(CT.Astro.integrated, group.by = "region")+ ggtitle("Astrocytes2")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p5 <-DimPlot(CT.Neuron.integrated, group.by = "region")+ ggtitle("Excitatory Neurons2")+theme(plot.title = element_text(size = 15, face = "bold"),legend.position = "none")
-p6 <-DimPlot(CT.Oligo.integrated, group.by = "region")+ggtitle("Oligodendrocytes2")+theme(plot.title = element_text(size = 15, face = "bold"))
-
-library(ggrepel)
-library(ggpubr)
-
-ggarrange(p1, p2,p3,p4, p5,p6,
-                    ncol = 3, nrow = 2)
-
+for (obj in integrated_cells){
+  print(DimPlot(obj,  group.by = "region"))
+}
+ 
 ```

@@ -291,10 +291,10 @@ saveRDS(CT2.integrated, "CT2.labels.rds")
 #### **a)** Integrating the same cell types from two brain regions
 ```r
 library(Seurat)
-SP1 <-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP1.integrated.rds")
-SP2<-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/SP2.integrated.rds")
-CT1 <- readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/CT1.integrated.rds")
-CT2<-readRDS("D:/Poland/PHD/spatial/Second_set/Single_Nucli/CT2.integrated.rds")
+SP1 <-readRDS("//SP1.integrated.rds")
+SP2<-readRDS("//SP2.integrated.rds")
+CT1 <- readRDS("//CT1.integrated.rds")
+CT2<-readRDS("//CT2.integrated.rds")
 
 SP1@meta.data$orig.ident<- sub("CR_SP1","CR_ON1",SP1@meta.data$orig.ident)
 SP1@meta.data$orig.ident<- sub("HE_SP1","HE_ON1",SP1@meta.data$orig.ident)

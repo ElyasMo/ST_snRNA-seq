@@ -93,7 +93,7 @@ Seurat_Objects <- lapply(Seurat_Objects, function(X){
 
 ## Preparing the required information for clustering and PCA/UMAP plots
 
-Seurat_Objects <- lapply(Seurat_Objects, function(X){
+Seurat_Objects_single <- lapply(Seurat_Objects, function(X){
   X <- RunPCA(X, verbose = FALSE)
   X <- RunUMAP(X, dims = 1:30, verbose = FALSE)
   X <- FindNeighbors(X, dims = 1:30, verbose = FALSE)
@@ -102,7 +102,7 @@ Seurat_Objects <- lapply(Seurat_Objects, function(X){
 
 
 ##clusters are shown prior to consequtive data integration
-for (obj in Seurat_Objects){
+for (obj in Seurat_Objects_single){
   print(SpatialDimPlot(obj,label = TRUE, label.size = 3))
 }
 
@@ -200,7 +200,10 @@ H_Prefrontal <- NormalizeData(H_Prefrontal, verbose = FALSE) %>% RunPCA(verbose 
 # DefaultAssay(SP2.integrated) <- "integrated"
 # DefaultAssay(CT1.integrated) <- "integrated"
 # DefaultAssay(CT2.integrated) <- "integrated"
-
+```
+#### **b)** snRNA-seq label transfering
+```r
+#The same workflow can be applied to single slices
 #Finding the anchors between single nuclei dataset and integrated spatial transcriptomics data.
 SP1.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP1.integrated, normalization.method = "LogNormalize")
 SP2.anchors <- FindTransferAnchors(reference = AD_Prefrontal, query = SP2.integrated, normalization.method = "LogNormalize")

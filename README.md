@@ -79,9 +79,6 @@ for (nums in num){
 
 
 ##Scaling the data and regressing out the MT genes, 
-# If you want to use the information from single slices for consecutive slices data integration,
-# it is better to avoid scaling the data at this point and do this during the data integration
-# To do so, connsider do.scale=FALSE and do.center=FALSE in the ScaleData function
 Seurat_Objects <- lapply(Seurat_Objects, function(X){
   ScaleData(X, assay = "Spatial", verbose = FALSE, vars.to.regress = "percent.mt",do.scale = FALSE, do.center = FALSE)
   })
